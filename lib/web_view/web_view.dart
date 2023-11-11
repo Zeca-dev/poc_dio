@@ -55,6 +55,7 @@ class _AppWebViewState extends State<AppWebView> {
       NavigationDelegate(
         onProgress: (int progress) {
           // Update loading bar.
+          //todo: Verificar o loading
         },
         onPageStarted: (String url) {},
         onPageFinished: (String url) {},
