@@ -2,8 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:poc_dio/dio_http.dart';
-import 'package:poc_dio/web_view_controller.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:poc_dio/web_view/web_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -47,14 +46,24 @@ class _HomePageState extends State<HomePage> {
                   try {
                     final dio = dioInstance();
 
-                    final response = await dio.get('todos/');
-                    print(response.data);
+                    final response = await dio.get('todos/').then(
+                          (value) => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AppWebView(
+                                  title: 'App Web View',
+                                  url: 'https://pub.dev/',
+                                  messageError: 'Esta é uma mensagem de erro!'),
+                            ),
+                          ),
+                        );
+
+                    // log(response.data);
                   } catch (error) {
                     log(error.toString());
                   }
                 },
                 child: const Text('GET')),
-            Expanded(child: WebViewWidget(controller: controller))
           ],
         ),
       ),
