@@ -39,5 +39,23 @@ Dio dioInstance() {
     },
   );
 
+  dio.interceptors.add(
+    InterceptorsWrapper(
+      onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
+        //Buscar token salvo na base local e enviar nas requisicoes
+        options.headers.addAll({'token': '123456'}); //Adicionar Token
+        print(dio.request(dio.options.headers.toString()));
+        return handler.next(options);
+      },
+      onResponse: (Response response, ResponseInterceptorHandler handler) {
+        return handler.next(response);
+      },
+      onError: (DioException e, ErrorInterceptorHandler handler) {
+        return handler.next(e);
+      },
+    ),
+  );
+  dio.interceptors.add(LogInterceptor());
+
   return dio;
 }

@@ -28,15 +28,8 @@ class _AppWebViewState extends State<AppWebView> {
           backgroundColor: Colors.redAccent,
           title: Text(widget.title),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        body: Stack(
           children: [
-            if (isLoading)
-              const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.red,
-                ),
-              ),
             hasError
                 ? Center(
                     child: Text(
@@ -44,6 +37,14 @@ class _AppWebViewState extends State<AppWebView> {
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red),
                   ))
                 : Expanded(child: WebViewWidget(controller: _createWebViewController())),
+            Visibility(
+              visible: isLoading,
+              child: const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.red,
+                ),
+              ),
+            ),
           ],
         ));
   }
@@ -56,9 +57,20 @@ class _AppWebViewState extends State<AppWebView> {
         onProgress: (int progress) {
           // Update loading bar.
           //todo: Verificar o loading
+          setState(() {
+            isLoading = true;
+          });
         },
-        onPageStarted: (String url) {},
-        onPageFinished: (String url) {},
+        onPageStarted: (String url) {
+          setState(() {
+            isLoading = true;
+          });
+        },
+        onPageFinished: (String url) {
+          setState(() {
+            isLoading = false;
+          });
+        },
         onWebResourceError: (WebResourceError error) {
           setState(() {
             isLoading = false;
